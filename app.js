@@ -1,4 +1,4 @@
-require('./config/config');
+
 const express = require('express');
 const cors = require('cors');
 const filesUpload = require('express-fileupload');
@@ -18,21 +18,10 @@ app.use(bodyParser.urlencoded({ extended: false, limit: '9000mb' }));
 app.use(bodyParser.json({ limit: '9000mb' }));
 app.use(filesUpload({ useTempFiles: true }));
 
-const mime = require('mime');
 
-// cambios para hacer
-// escribimos la función que creará nuestra cabecera
-const setHeadersOnStatic = (res, path, stat) => {
-    const type = mime.getType(path);
-    res.set('content-type', type);
-}
 
-// creamos el objeto con las opciones
-const staticOptions = {
-    setHeaders: setHeadersOnStatic
-}
 
-app.use(express.static(__dirname + '/public/www/', staticOptions));
+app.use(express.static(__dirname + '/public/www/'));
 app.all('*', (req, res) => {
     res.status(200).sendFile(__dirname + '/public/www/index.html');
 });
@@ -44,7 +33,7 @@ app.all('*', (req, res) => {
 // jobs
 
 
-server.listen(3001, (err) => {
+app.listen(3001, (err) => {
     if (err) {
         return console.log(`Error ${err}`);
     }
